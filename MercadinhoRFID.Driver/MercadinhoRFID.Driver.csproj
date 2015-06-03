@@ -48,10 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DualTagObject.cs" />
     <Compile Include="Mode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="R220Configuration.cs" />
     <Compile Include="R220Continuous.cs" />
+    <Compile Include="DualTagMonitor.cs" />
+    <Compile Include="RegistryAccess.cs" />
+    <Compile Include="RegistryConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
