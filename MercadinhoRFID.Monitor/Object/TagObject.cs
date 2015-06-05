@@ -7,6 +7,22 @@ namespace MercadinhoRFID.Monitor.Object
         public static int StatusChangeThreshold = 500;
         public static int LostThreshold = 10*1000;
         public string Epc { get; set; }
+
+        public string EpcLongo
+        {
+            get
+            {
+                var result = string.Empty;
+                for (int i = 0; i < Epc.Length; i++)
+                {
+                    if (i > 0 && i % 4 == 0)
+                        result += '-';
+                    result += Epc[i];
+                }
+                return result;
+            }
+        }
+
         public DateTime LTSAntenna1 { get; set; }
         public DateTime LTSAntenna2 { get; set; }
 

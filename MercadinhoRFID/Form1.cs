@@ -15,6 +15,7 @@ namespace MercadinhoRFID
     {
         private DualTagMonitor _monitor;
         private System.Timers.Timer _timer;
+        private DualTagObject _current;
 
         public string RootPath
         {
@@ -31,6 +32,11 @@ namespace MercadinhoRFID
             get { return Path.Combine(RootPath, "log.txt"); }
         }
 
+        public string ConfigFileName
+        {
+            get { return Path.Combine(RootPath, "Resources", "cfg.txt"); }
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -39,27 +45,54 @@ namespace MercadinhoRFID
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadMonitor();
+            _current = _monitor.DualTagsObject.First();
             _timer = new System.Timers.Timer(250);
             _timer.Elapsed += Elapsed;
 
+            LoadLog();
+            DoLog("Aplicação Iniciada");
+            dataGridView2.DataSource = new[]
+            {
+                new DualTagObjectDetail("Clique uma linha acima ", "para exibir detalhes")
+            };
+        }
+
+        private void LoadLog()
+        {
+            listBox1.Items.Clear();
             if (File.Exists(LogFileName))
             {
                 var log = File.ReadAllLines(LogFileName);
                 listBox1.Items.AddRange(log.Cast<object>().ToArray());
             }
-            DoLog("Aplicação Iniciada");
         }
 
         private void Elapsed(object sender, ElapsedEventArgs e)
         {
-            Invoke(new MethodInvoker(() => dataGridView1.Refresh()));
+            Invoke(new MethodInvoker(() =>
+            {
+                dataGridView1.Refresh();
+                if (_monitor.AlgumPerdido)
+                {
+                    button3.BackColor = Color.Red;
+                }
+                else if (_monitor.AlgumFora)
+                {
+                    button3.BackColor = Color.Yellow;
+                }
+                else
+                {
+                    button3.BackColor = Color.White;
+                }
+                dataGridView2.DataSource = _current.GetDetails();
+            }));
         }
 
 
         private void LoadMonitor()
         {
-            var fileName = Path.Combine(RootPath, "Resources", "dual_tag_epcs.txt");
-            _monitor = new DualTagMonitor(fileName);
+            var tagsFileName = Path.Combine(RootPath, "Resources", "dual_tag_epcs.txt");
+            _monitor = new DualTagMonitor(tagsFileName, ConfigFileName);
             _monitor.DualTagMonitorChange += DualTagMonitorChangeHandler;
             _monitor.DualTagMonitorLost += DualTagMonitorLostHandler;
             _monitor.DualTagMonitorIncoerente += DualTagMonitorIncoerenteHandler;
@@ -116,6 +149,7 @@ namespace MercadinhoRFID
             _monitor.Start();
             button1.Enabled = false;
             button2.Enabled = true;
+            button5.Enabled = false;
             DoLog("Aquisição Iniciada");
         }
 
@@ -126,6 +160,7 @@ namespace MercadinhoRFID
             ControlBox = true;
             button1.Enabled = true;
             button2.Enabled = false;
+            button5.Enabled = true;
             DoLog("Aquisição Finalizada");
         }
 
@@ -149,6 +184,34 @@ namespace MercadinhoRFID
             if (dualTagObject.IsLost)
             {
                 row.DefaultCellStyle.BackColor = Color.Red;
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var row = dataGridView1.Rows[e.RowIndex];
+            _current = (DualTagObject)row.DataBoundItem;
+            dataGridView2.DataSource = _current.GetDetails();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(@"Tem certeza de que deseja remover o log?", @"Atenção!", MessageBoxButtons.YesNo) ==
+                DialogResult.Yes)
+            {
+                File.Delete(LogFileName);
+                LoadLog();
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var cfgAddress = new CfgAddress(_monitor.Address);
+            if (cfgAddress.ShowDialog() == DialogResult.OK)
+            {
+                var ipAdress = cfgAddress.IpAddress;
+                File.WriteAllLines(ConfigFileName, new [] {ipAdress});
+                _monitor.Address = ipAdress;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace MercadinhoRFID.Monitor.Object
 {
@@ -71,5 +72,35 @@ namespace MercadinhoRFID.Monitor.Object
             }
             return statusHasChanged;
         }
+
+        public DualTagObjectDetail[] GetDetails()
+        {
+            var now = DateTime.Now;
+            return new []
+            {
+                new DualTagObjectDetail("Identificação", Id.ToString(CultureInfo.InvariantCulture)), 
+                new DualTagObjectDetail("EPC Interno", Tag1.EpcLongo), 
+                new DualTagObjectDetail("EPC Externo", Tag2.EpcLongo), 
+                new DualTagObjectDetail("Estado Geral", IsLost ? "Perdido" : Status.ToString()), 
+                new DualTagObjectDetail("Etiqueta Int.", Tag1.IsLost ? "Perdida" : Tag1.Status.ToString()), 
+                new DualTagObjectDetail("Etiqueta Int. - Dentro", Tag1.LTSAntenna1 > DateTime.MinValue ? Tag1.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
+                new DualTagObjectDetail("Etiqueta Int. - Fora", Tag1.LTSAntenna2 > DateTime.MinValue ? Tag1.LTSAntenna2.Subtract(now).ToString() : string.Empty), 
+                new DualTagObjectDetail("Etiqueta Ext.", Tag2.IsLost ? "Perdida" : Tag2.Status.ToString()), 
+                new DualTagObjectDetail("Etiqueta Ext. - Dentro", Tag2.LTSAntenna1 > DateTime.MinValue ? Tag2.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
+                new DualTagObjectDetail("Etiqueta Ext. - Fora", Tag2.LTSAntenna2 > DateTime.MinValue ? Tag2.LTSAntenna2.Subtract(now).ToString() : string.Empty), 
+            };
+        }
+    }
+
+    public class DualTagObjectDetail
+    {
+        public DualTagObjectDetail(string chave, string valor)
+        {
+            Chave = chave;
+            Valor = valor;
+        }
+
+        public string Chave { get; set; }
+        public string Valor { get; set; }
     }
 }
