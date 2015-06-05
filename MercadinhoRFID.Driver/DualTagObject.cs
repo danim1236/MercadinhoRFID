@@ -66,7 +66,7 @@ namespace MercadinhoRFID.Driver
 
     public class TagObject
     {
-        public static int StatusChangeThreshold = 1000;
+        public static int StatusChangeThreshold = 500;
         public static int LostThreshold = 10*1000;
         public string Epc { get; set; }
         public DateTime LTSAntenna1 { get; set; }

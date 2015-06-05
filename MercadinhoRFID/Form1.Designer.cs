@@ -70,11 +70,12 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(13, 169);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(626, 199);
+            this.listBox1.Size = new System.Drawing.Size(636, 199);
             this.listBox1.TabIndex = 2;
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -85,7 +86,7 @@
             this.hasLostDataGridViewCheckBoxColumn,
             this.PerdidoHa});
             this.dataGridView1.DataSource = this.dualTagObjectBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(129, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(139, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(510, 150);

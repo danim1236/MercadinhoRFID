@@ -16,7 +16,10 @@ namespace MercadinhoRFID.Driver
         private readonly R220Continuous _driver;
         private readonly Timer _timer;
 
-        public DualTagObject[] DualTagsObject{get { return _dualTagsObject; }}
+        public DualTagObject[] DualTagsObject
+        {
+            get { return _dualTagsObject; }
+        }
 
         public R220Configuration Configuration { get; set; }
 
@@ -30,20 +33,20 @@ namespace MercadinhoRFID.Driver
             var lines = File.ReadAllLines(fileName);
             int count = 1;
             return (from line in lines
-                    let parts = line.Split(new[] {' ', '\t', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)
-                    where parts.Length == 2
-                    select new DualTagObject
+                let parts = line.Split(new[] {' ', '\t', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)
+                where parts.Length == 2
+                select new DualTagObject
+                {
+                    Id = count++,
+                    Tag1 = new TagObject
                     {
-                        Id = count++,
-                        Tag1 = new TagObject
-                        {
-                            Epc = parts[0].Replace("-", "")
-                        },
-                        Tag2 = new TagObject
-                        {
-                            Epc = parts[1].Replace("-", "")
-                        }
-                    }).ToArray();
+                        Epc = parts[0].Replace("-", "")
+                    },
+                    Tag2 = new TagObject
+                    {
+                        Epc = parts[1].Replace("-", "")
+                    }
+                }).ToArray();
         }
 
         public DualTagMonitor(DualTagObject[] dualTagsObject)
@@ -57,11 +60,16 @@ namespace MercadinhoRFID.Driver
                 _tagsByEpc[dualTagObject.Tag1.Epc] = dualTagObject.Tag1;
                 _tagsByEpc[dualTagObject.Tag2.Epc] = dualTagObject.Tag2;
             }
+            _perdido = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
+            _incoerente = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _driver = new R220Continuous(Configuration);
             _driver.TagsReported += TagsReported;
             _timer = new Timer(500);
             _timer.Elapsed += Elapsed;
         }
+
+        private readonly Dictionary<int, bool> _perdido;
+        private readonly Dictionary<int, bool> _incoerente;
 
         private void Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -70,6 +78,17 @@ namespace MercadinhoRFID.Driver
                 if (dualTagObject.CheckStatus())
                 {
                     OnDualTagMonitorChange(dualTagObject);
+                }
+                if (_perdido[dualTagObject.Id] != dualTagObject.HasLost)
+                {
+                    _perdido[dualTagObject.Id] = dualTagObject.HasLost;
+                    OnDualTagMonitorLost(dualTagObject);
+                    OnDualTagMonitorChange(dualTagObject);
+                }
+                if (_incoerente[dualTagObject.Id] != dualTagObject.IncoerenciaStatus)
+                {
+                    _incoerente[dualTagObject.Id] = dualTagObject.IncoerenciaStatus;
+                    OnDualTagMonitorLost(dualTagObject);
                 }
             }
         }
@@ -113,10 +132,24 @@ namespace MercadinhoRFID.Driver
         }
 
         public event DualTagMonitorChange DualTagMonitorChange;
+        public event DualTagMonitorChange DualTagMonitorLost;
+        public event DualTagMonitorChange DualTagMonitorIncoerente;
 
         protected virtual void OnDualTagMonitorChange(DualTagObject args)
         {
             var handler = DualTagMonitorChange;
+            if (handler != null) handler(this, args);
+        }
+
+        protected virtual void OnDualTagMonitorLost(DualTagObject args)
+        {
+            var handler = DualTagMonitorLost;
+            if (handler != null) handler(this, args);
+        }
+
+        protected virtual void OnDualTagMonitorIncoerente(DualTagObject args)
+        {
+            var handler = DualTagMonitorIncoerente;
             if (handler != null) handler(this, args);
         }
     }
