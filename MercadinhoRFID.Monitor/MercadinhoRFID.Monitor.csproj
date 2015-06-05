@@ -7,8 +7,8 @@
     <ProjectGuid>{42EE30A8-B83E-486D-AABC-E8348D354C7C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MercadinhoRFID.Driver</RootNamespace>
-    <AssemblyName>MercadinhoRFID.Driver</AssemblyName>
+    <RootNamespace>MercadinhoRFID.Monitor</RootNamespace>
+    <AssemblyName>MercadinhoRFID.Monitor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,14 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DualTagObject.cs" />
-    <Compile Include="Mode.cs" />
+    <Compile Include="Driver\R220Continuous.cs" />
+    <Compile Include="Object\DualTagObject.cs" />
+    <Compile Include="Driver\Mode.cs" />
+    <Compile Include="Object\TagObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="R220Configuration.cs" />
-    <Compile Include="R220Continuous.cs" />
+    <Compile Include="Driver\R220Configuration.cs" />
     <Compile Include="DualTagMonitor.cs" />
-    <Compile Include="RegistryAccess.cs" />
-    <Compile Include="RegistryConfig.cs" />
+    <Compile Include="Driver\RegistryAccess.cs" />
+    <Compile Include="Object\TagStatus.cs" />
+    <Compile Include="Driver\RegistryConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

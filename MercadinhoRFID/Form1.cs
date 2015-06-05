@@ -6,7 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Timers;
 using System.Windows.Forms;
-using MercadinhoRFID.Driver;
+using MercadinhoRFID.Monitor;
+using MercadinhoRFID.Monitor.Object;
 
 namespace MercadinhoRFID
 {

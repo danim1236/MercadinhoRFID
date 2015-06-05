@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using Impinj.OctaneSdk;
 
-namespace MercadinhoRFID.Driver
+namespace MercadinhoRFID.Monitor.Driver
 {
     public class R220Continuous : IDisposable
     {

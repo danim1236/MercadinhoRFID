@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace MercadinhoRFID.Driver
+namespace MercadinhoRFID.Monitor.Driver
 {
     public static class RegistryConfig
     {

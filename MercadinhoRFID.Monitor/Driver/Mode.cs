@@ -1,4 +1,4 @@
-namespace PucRio.Cetuc.Ldhs.Rfid.Drivers.Model
+namespace MercadinhoRFID.Monitor.Driver
 {
     public class Mode
     {

@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Impinj.OctaneSdk;
-using PucRio.Cetuc.Ldhs.Rfid.Drivers.Model;
 
-namespace MercadinhoRFID.Driver
+namespace MercadinhoRFID.Monitor.Driver
 {
     public class R220Configuration
     {

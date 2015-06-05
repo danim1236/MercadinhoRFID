@@ -1,4 +1,6 @@
-﻿namespace MercadinhoRFID
+﻿using MercadinhoRFID.Monitor.Object;
+
+namespace MercadinhoRFID
 {
     partial class Form1
     {
@@ -109,7 +111,7 @@
             // 
             // dualTagObjectBindingSource
             // 
-            this.dualTagObjectBindingSource.DataSource = typeof(MercadinhoRFID.Driver.DualTagObject);
+            this.dualTagObjectBindingSource.DataSource = typeof(DualTagObject);
             // 
             // dataGridView2
             // 

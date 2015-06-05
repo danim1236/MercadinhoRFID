@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace MercadinhoRFID.Driver
+namespace MercadinhoRFID.Monitor.Driver
 {
     public class RegistryAccess
     {

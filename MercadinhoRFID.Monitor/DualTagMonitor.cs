@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Timers;
 using Impinj.OctaneSdk;
-using Timer = System.Timers.Timer;
+using MercadinhoRFID.Monitor.Driver;
+using MercadinhoRFID.Monitor.Object;
 
-namespace MercadinhoRFID.Driver
+namespace MercadinhoRFID.Monitor
 {
     public class DualTagMonitor
     {
