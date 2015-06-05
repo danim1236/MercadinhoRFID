@@ -34,6 +34,31 @@ namespace MercadinhoRFID
         {
             var fileName = Path.Combine(RootPath, "Resources", "dual_tag_epcs.txt");
             _monitor = new DualTagMonitor(fileName);
+            _monitor.DualTagMonitorChange += DualTagMonitorChangeHandler;
+        }
+
+        private void DualTagMonitorChangeHandler(object sender, DualTagObject args)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                listBox1.Items.Add(string.Format("Item {0} está {1}", args.Id, args.Status));
+                listBox1.Refresh();
+                listBox1.SelectedIndex = listBox1.Items.Count - 1;
+            }));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _monitor.Start();
+            button1.Enabled = false;
+            button2.Enabled = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _monitor.Stop();
+            button1.Enabled = true;
+            button2.Enabled = false;
         }
     }
 }

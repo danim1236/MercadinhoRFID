@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Impinj.OctaneSdk;
-using PucRio.Cetuc.Ldhs.Rfid.Drivers.Model;
 
 namespace MercadinhoRFID.Driver
 {
@@ -176,6 +175,13 @@ namespace MercadinhoRFID.Driver
             settings.SearchMode = SearchMode.DualTarget;
             settings.ReaderMode = ReaderMode.AutoSetDenseReader;
             settings.TagPopulationEstimate = 50;
+
+            //settings.Filters.Mode = TagFilterMode.OnlyFilter1;
+            //settings.Filters.TagFilter1.MemoryBank = MemoryBank.Epc;
+            //settings.Filters.TagFilter1.BitPointer = 0x20;
+            //settings.Filters.TagFilter1.BitCount = 16;
+            //settings.Filters.TagFilter1.TagMask = "41C9";
+            //settings.Filters.TagFilter1.FilterOp = TagFilterOp.Match;
 
             SetupAntennas(settings);
 

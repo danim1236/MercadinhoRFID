@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MercadinhoRFID", "MercadinhoRFID\MercadinhoRFID.csproj", "{62D26385-8374-4935-8BE5-EBC25D241E2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MercadinhoRFID.Driver", "MercadinhoRFID.Driver\MercadinhoRFID.Driver.csproj", "{42EE30A8-B83E-486D-AABC-E8348D354C7C}"

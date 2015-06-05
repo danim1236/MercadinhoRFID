@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using Impinj.OctaneSdk;
+using Timer = System.Timers.Timer;
 
 namespace MercadinhoRFID.Driver
 {
     public class DualTagMonitor
     {
-        public int TimeThreshold = 1000;
+        public int TimeThreshold = 500;
         private readonly DualTagObject[] _dualTagsObject;
         private readonly Dictionary<string, TagObject> _tagsByEpc;
-
         private readonly R220Continuous _driver;
+        private readonly Timer _timer;
+
         public R220Configuration Configuration { get; set; }
 
         public DualTagMonitor(string fileName)
@@ -23,18 +26,20 @@ namespace MercadinhoRFID.Driver
         private static DualTagObject[] ReadFromFile(string fileName)
         {
             var lines = File.ReadAllLines(fileName);
+            int count = 1;
             return (from line in lines
                     let parts = line.Split(new[] {' ', '\t', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)
                     where parts.Length == 2
                     select new DualTagObject
                     {
+                        Id = count++,
                         Tag1 = new TagObject
                         {
-                            Epc = parts[0]
+                            Epc = parts[0].Replace("-", "")
                         },
                         Tag2 = new TagObject
                         {
-                            Epc = parts[1]
+                            Epc = parts[1].Replace("-", "")
                         }
                     }).ToArray();
         }
@@ -42,7 +47,7 @@ namespace MercadinhoRFID.Driver
         public DualTagMonitor(DualTagObject[] dualTagsObject)
         {
             Configuration = RegistryConfig.New<R220Configuration>();
-            Configuration.IpAddress = "139.82.28.24";
+            Configuration.IpAddress = "192.168.1.159";
             _dualTagsObject = dualTagsObject;
             _tagsByEpc = new Dictionary<string, TagObject>();
             foreach (var dualTagObject in _dualTagsObject)
@@ -52,15 +57,30 @@ namespace MercadinhoRFID.Driver
             }
             _driver = new R220Continuous(Configuration);
             _driver.TagsReported += TagsReported;
+            _timer = new Timer(500);
+            _timer.Elapsed += Elapsed;
+        }
+
+        private void Elapsed(object sender, ElapsedEventArgs e)
+        {
+            foreach (var dualTagObject in _dualTagsObject)
+            {
+                if (dualTagObject.CheckStatus())
+                {
+                    OnDualTagMonitorChange(dualTagObject);
+                }
+            }
         }
 
         public bool Start()
         {
+            _timer.Start();
             return _driver.StartRead();
         }
 
         public bool Stop()
         {
+            _timer.Stop();
             return _driver.StopRead();
         }
 
@@ -75,27 +95,11 @@ namespace MercadinhoRFID.Driver
                     if (tag.AntennaPortNumber == 1)
                     {
                         tagObject.LTSAntenna1 = tag.LastSeenTime.LocalDateTime;
-                        if (tagObject.LTSAntenna1.Subtract(tagObject.LTSAntenna2).TotalMilliseconds > TimeThreshold)
-                        {
-                            tagObject.Status = DualTagStatus.DENTRO;
-                        }
                     }
                     else
                     {
                         tagObject.LTSAntenna2 = tag.LastSeenTime.LocalDateTime;
-                        if (tagObject.LTSAntenna2.Subtract(tagObject.LTSAntenna1).TotalMilliseconds > TimeThreshold)
-                        {
-                            tagObject.Status = DualTagStatus.FORA;
-                        }
                     }
-                }
-            }
-            foreach (var dualTagObject in _dualTagsObject)
-            {
-                if (dualTagObject.Status != dualTagObject.LastStatus)
-                {
-                    dualTagObject.LastStatus = dualTagObject.Status;
-                    OnDualTagMonitorChange(dualTagObject);
                 }
             }
         }
