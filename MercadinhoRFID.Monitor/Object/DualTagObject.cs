@@ -25,8 +25,8 @@ namespace MercadinhoRFID.Monitor.Object
         public DateTime LTSAntenna1 { get { return Tag1.LTSAntenna1 > Tag2.LTSAntenna1 ? Tag1.LTSAntenna1 : Tag2.LTSAntenna1; } }
         public DateTime LTSAntenna2 { get { return Tag1.LTSAntenna2 > Tag2.LTSAntenna2 ? Tag1.LTSAntenna2 : Tag2.LTSAntenna2; } }
 
-        public DateTime? FTSAntenna1 { get { return Tag1.LTSAntenna1 < Tag2.LTSAntenna1 ? Tag1.LTSAntenna1 : Tag2.LTSAntenna1; } }
-        public DateTime? FTSAntenna2 { get { return Tag1.LTSAntenna2 < Tag2.LTSAntenna2 ? Tag1.LTSAntenna2 : Tag2.LTSAntenna2; } }
+        public DateTime? FTSAntenna1 { get { return Tag1.FTSAntenna1 < Tag2.FTSAntenna1 ? Tag1.FTSAntenna1 : Tag2.FTSAntenna1; } }
+        public DateTime? FTSAntenna2 { get { return Tag1.FTSAntenna2 < Tag2.FTSAntenna2 ? Tag1.FTSAntenna2 : Tag2.FTSAntenna2; } }
 
         public TimeSpan? ForaHa
         {
