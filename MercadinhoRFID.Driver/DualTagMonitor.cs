@@ -62,6 +62,7 @@ namespace MercadinhoRFID.Driver
             }
             _perdido = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _incoerente = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
+            _remocao = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _driver = new R220Continuous(Configuration);
             _driver.TagsReported += TagsReported;
             _timer = new Timer(500);
@@ -70,6 +71,7 @@ namespace MercadinhoRFID.Driver
 
         private readonly Dictionary<int, bool> _perdido;
         private readonly Dictionary<int, bool> _incoerente;
+        private readonly Dictionary<int, bool> _remocao;
 
         private void Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -79,9 +81,9 @@ namespace MercadinhoRFID.Driver
                 {
                     OnDualTagMonitorChange(dualTagObject);
                 }
-                if (_perdido[dualTagObject.Id] != dualTagObject.HasLost)
+                if (_perdido[dualTagObject.Id] != dualTagObject.IsLost)
                 {
-                    _perdido[dualTagObject.Id] = dualTagObject.HasLost;
+                    _perdido[dualTagObject.Id] = dualTagObject.IsLost;
                     OnDualTagMonitorLost(dualTagObject);
                     OnDualTagMonitorChange(dualTagObject);
                 }
@@ -89,6 +91,11 @@ namespace MercadinhoRFID.Driver
                 {
                     _incoerente[dualTagObject.Id] = dualTagObject.IncoerenciaStatus;
                     OnDualTagMonitorLost(dualTagObject);
+                }
+                if (_remocao[dualTagObject.Id] != dualTagObject.HasRemocao)
+                {
+                    _remocao[dualTagObject.Id] = dualTagObject.HasRemocao;
+                    OnDualTagMonitorRemocao(dualTagObject);
                 }
             }
         }
@@ -134,6 +141,7 @@ namespace MercadinhoRFID.Driver
         public event DualTagMonitorChange DualTagMonitorChange;
         public event DualTagMonitorChange DualTagMonitorLost;
         public event DualTagMonitorChange DualTagMonitorIncoerente;
+        public event DualTagMonitorChange DualTagMonitorRemocao;
 
         protected virtual void OnDualTagMonitorChange(DualTagObject args)
         {
@@ -150,6 +158,11 @@ namespace MercadinhoRFID.Driver
         protected virtual void OnDualTagMonitorIncoerente(DualTagObject args)
         {
             var handler = DualTagMonitorIncoerente;
+            if (handler != null) handler(this, args);
+        }
+        protected virtual void OnDualTagMonitorRemocao(DualTagObject args)
+        {
+            var handler = DualTagMonitorRemocao;
             if (handler != null) handler(this, args);
         }
     }

@@ -27,8 +27,6 @@ namespace MercadinhoRFID.Driver
         public DateTime? FTSAntenna1 { get { return Tag1.LTSAntenna1 < Tag2.LTSAntenna1 ? Tag1.LTSAntenna1 : Tag2.LTSAntenna1; } }
         public DateTime? FTSAntenna2 { get { return Tag1.LTSAntenna2 < Tag2.LTSAntenna2 ? Tag1.LTSAntenna2 : Tag2.LTSAntenna2; } }
 
-        public DateTime? ForaDesde { get { return Status == TagStatus.FORA ? LTSAntenna1 : (DateTime?) null; } }
-
         public TimeSpan? ForaHa
         {
             get
@@ -43,12 +41,23 @@ namespace MercadinhoRFID.Driver
         {
             get { return LTSAntenna1 > LTSAntenna2 ? LTSAntenna1 : LTSAntenna2; }
         }
-        public DateTime? PerdidoDesde { get { return HasLost ? LastTimeSeen : (DateTime?)null; } }
-        public TimeSpan? PerdidoHa { get { return HasLost ? DateTime.Now.Subtract(LastTimeSeen) : (TimeSpan?)null; } }
+        public TimeSpan? PerdidoHa { get { return IsLost ? DateTime.Now.Subtract(LastTimeSeen) : (TimeSpan?)null; } }
+
+        public TimeSpan? RemocaoHa
+        {
+            get
+            {
+                return HasRemocao
+                    ? DateTime.Now.Subtract(Lost1 ? Tag1.LastTimeSeen : Tag2.LastTimeSeen)
+                    : (TimeSpan?) null;
+            }
+        }
 
         public bool Lost1 { get { return Tag1.IsLost; } }
         public bool Lost2 { get { return Tag2.IsLost; } }
-        public bool HasLost{get { return Lost1 || Lost2; }}
+        public bool IsLost { get { return Lost1 && Lost2; } }
+        public bool HasLoose { get { return Lost1 || Lost2; } }
+        public bool HasRemocao { get { return HasLoose && !IsLost; } }
 
         public bool IncoerenciaStatus{get { return Tag1.Status != Tag2.Status; }}
 

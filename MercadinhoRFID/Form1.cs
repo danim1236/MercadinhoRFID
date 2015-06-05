@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -45,6 +46,7 @@ namespace MercadinhoRFID
                 var log = File.ReadAllLines(LogFileName);
                 listBox1.Items.AddRange(log.Cast<object>().ToArray());
             }
+            DoLog("Aplicação Iniciada");
         }
 
         private void Elapsed(object sender, ElapsedEventArgs e)
@@ -60,6 +62,7 @@ namespace MercadinhoRFID
             _monitor.DualTagMonitorChange += DualTagMonitorChangeHandler;
             _monitor.DualTagMonitorLost += DualTagMonitorLostHandler;
             _monitor.DualTagMonitorIncoerente += DualTagMonitorIncoerenteHandler;
+            _monitor.DualTagMonitorRemocao += DualTagMonitorRemocao;
             dataGridView1.DataSource = new BindingList<DualTagObject>(_monitor.DualTagsObject);
         }
 
@@ -67,7 +70,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - Item {1} está {2}", DateTime.Now, args.Id, args.Status);
+                var logLine = string.Format("Item {0} está {1}", args.Id, args.Status);
                 DoLog(logLine);
             }));
         }
@@ -75,8 +78,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - Item {1} foi {2}", DateTime.Now, 
-                    args.Id, args.HasLost ? "Perdido" : "Encontrado");
+                var logLine = string.Format("Item {0} foi {1}", args.Id, args.HasLoose ? "Perdido" : "Encontrado");
                 DoLog(logLine);
             }));
         }
@@ -84,14 +86,22 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - Item {1} foi {2}. {3} / {4}", DateTime.Now,
-                    args.Id, args.IncoerenciaStatus ? "Incoerente" : "Coerente",
+                var logLine = string.Format("Item {0} foi {1}. {2} / {3}", args.Id, args.IncoerenciaStatus ? "Incoerente" : "Coerente",
                     args.Tag1.Status, args.Tag2.Status);
+                DoLog(logLine);
+            }));
+        }
+        private void DualTagMonitorRemocao(object sender, DualTagObject args)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, args.Lost1 ? "Interna" : "Externa");
                 DoLog(logLine);
             }));
         }
         private void DoLog(string logLine)
         {
+            logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - {1}", DateTime.Now, logLine);
             File.AppendAllLines(LogFileName, new[] {logLine});
             listBox1.Items.Add(logLine);
             listBox1.Refresh();
@@ -105,6 +115,7 @@ namespace MercadinhoRFID
             _monitor.Start();
             button1.Enabled = false;
             button2.Enabled = true;
+            DoLog("Aquisição Iniciada");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -114,6 +125,30 @@ namespace MercadinhoRFID
             ControlBox = true;
             button1.Enabled = true;
             button2.Enabled = false;
+            DoLog("Aquisição Finalizada");
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DoLog("Aplicação Finalizada");
+        }
+
+        private void dataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = dataGridView1.Rows[e.RowIndex];
+            var dualTagObject = (DualTagObject) row.DataBoundItem;
+            if (dualTagObject.Status == TagStatus.DENTRO)
+            {
+                row.DefaultCellStyle.BackColor = Color.White;
+            }
+            if (dualTagObject.Status == TagStatus.FORA)
+            {
+                row.DefaultCellStyle.BackColor = Color.Yellow;
+            }
+            if (dualTagObject.IsLost)
+            {
+                row.DefaultCellStyle.BackColor = Color.Red;
+            }
         }
     }
 }
