@@ -75,6 +75,7 @@ namespace MercadinhoRFID
 
         private void button1_Click(object sender, EventArgs e)
         {
+            ControlBox = false;
             _timer.Start();
             _monitor.Start();
             button1.Enabled = false;
@@ -85,6 +86,7 @@ namespace MercadinhoRFID
         {
             _monitor.Stop();
             _timer.Stop();
+            ControlBox = true;
             button1.Enabled = true;
             button2.Enabled = false;
         }
