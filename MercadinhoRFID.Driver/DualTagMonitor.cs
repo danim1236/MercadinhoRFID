@@ -16,6 +16,8 @@ namespace MercadinhoRFID.Driver
         private readonly R220Continuous _driver;
         private readonly Timer _timer;
 
+        public DualTagObject[] DualTagsObject{get { return _dualTagsObject; }}
+
         public R220Configuration Configuration { get; set; }
 
         public DualTagMonitor(string fileName)
@@ -94,11 +96,17 @@ namespace MercadinhoRFID.Driver
                     var tagObject = _tagsByEpc[epc];
                     if (tag.AntennaPortNumber == 1)
                     {
-                        tagObject.LTSAntenna1 = tag.LastSeenTime.LocalDateTime;
+                        //tagObject.LTSAntenna1 = tag.LastSeenTime.LocalDateTime;
+                        tagObject.LTSAntenna1 = DateTime.Now;
+                        if (!tagObject.FTSAntenna1.HasValue)
+                            tagObject.FTSAntenna1 = DateTime.Now;
                     }
                     else
                     {
-                        tagObject.LTSAntenna2 = tag.LastSeenTime.LocalDateTime;
+                        //tagObject.LTSAntenna2 = tag.LastSeenTime.LocalDateTime;
+                        tagObject.LTSAntenna2 = DateTime.Now;
+                        if (!tagObject.FTSAntenna2.HasValue)
+                            tagObject.FTSAntenna2 = DateTime.Now;
                     }
                 }
             }

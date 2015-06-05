@@ -131,7 +131,7 @@ namespace MercadinhoRFID.Driver
         {
             try
             {
-                if (!IsConnected)
+                if (IsConnected)
                 {
                     _reader.Stop();
 
