@@ -24,7 +24,7 @@ namespace MercadinhoRFID.Monitor
         }
 
         public R220Configuration Configuration { get; set; }
-        public bool AlgumPerdido { get { return _perdido.Values.Any(_ => _); } }
+        public bool AlgumPerdido { get { return _presente.Values.Any(_ => _); } }
         public bool AlgumFora { get { return _dualTagsObject.Any(_ => _.Status == TagStatus.FORA); } }
 
         public DualTagMonitor(string tagsFileName, string cfgFileName)
@@ -81,8 +81,7 @@ namespace MercadinhoRFID.Monitor
                 _tagsByEpc[dualTagObject.Tag1.Epc] = dualTagObject.Tag1;
                 _tagsByEpc[dualTagObject.Tag2.Epc] = dualTagObject.Tag2;
             }
-            _perdido = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
-            _incoerente = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
+            _presente = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _remocao = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _driver = new R220Continuous(Configuration);
             _driver.TagsReported += TagsReported;
@@ -90,8 +89,7 @@ namespace MercadinhoRFID.Monitor
             _timer.Elapsed += Elapsed;
         }
 
-        private readonly Dictionary<int, bool> _perdido;
-        private readonly Dictionary<int, bool> _incoerente;
+        private readonly Dictionary<int, bool> _presente;
         private readonly Dictionary<int, bool> _remocao;
 
         private void Elapsed(object sender, ElapsedEventArgs e)
@@ -102,20 +100,15 @@ namespace MercadinhoRFID.Monitor
                 {
                     OnDualTagMonitorChange(dualTagObject);
                 }
-                if (_perdido[dualTagObject.Id] != dualTagObject.IsLost)
+                if (_presente[dualTagObject.Id] != dualTagObject.IsPresente)
                 {
-                    _perdido[dualTagObject.Id] = dualTagObject.IsLost;
+                    _presente[dualTagObject.Id] = dualTagObject.IsPresente;
                     OnDualTagMonitorLost(dualTagObject);
                     OnDualTagMonitorChange(dualTagObject);
                 }
-                if (_incoerente[dualTagObject.Id] != dualTagObject.IncoerenciaStatus)
+                if (_remocao[dualTagObject.Id] != dualTagObject.IsRemovida)
                 {
-                    _incoerente[dualTagObject.Id] = dualTagObject.IncoerenciaStatus;
-                    OnDualTagMonitorLost(dualTagObject);
-                }
-                if (_remocao[dualTagObject.Id] != dualTagObject.HasRemocao)
-                {
-                    _remocao[dualTagObject.Id] = dualTagObject.HasRemocao;
+                    _remocao[dualTagObject.Id] = dualTagObject.IsRemovida;
                     OnDualTagMonitorRemocao(dualTagObject);
                 }
             }
@@ -144,17 +137,11 @@ namespace MercadinhoRFID.Monitor
                     var tagObject = _tagsByEpc[epc];
                     if (tag.AntennaPortNumber == 1)
                     {
-                        //tagObject.LTSAntenna1 = tag.LastSeenTime.LocalDateTime;
-                        tagObject.LTSAntenna1 = DateTime.Now;
-                        if (!tagObject.FTSAntenna1.HasValue)
-                            tagObject.FTSAntenna1 = DateTime.Now;
+                        tagObject.DetectedAntenna1();
                     }
                     else
                     {
-                        //tagObject.LTSAntenna2 = tag.LastSeenTime.LocalDateTime;
-                        tagObject.LTSAntenna2 = DateTime.Now;
-                        if (!tagObject.FTSAntenna2.HasValue)
-                            tagObject.FTSAntenna2 = DateTime.Now;
+                        tagObject.DetectedAntenna2();
                     }
                 }
             }

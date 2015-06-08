@@ -5,6 +5,7 @@ namespace MercadinhoRFID.Monitor.Object
 {
     public class DualTagObject
     {
+        private TagStatus _lastStatus;
         public int Id { get; set; }
 
         public TagObject Tag1 { get; set; }
@@ -12,66 +13,32 @@ namespace MercadinhoRFID.Monitor.Object
 
         public TagStatus Status
         {
-            get { return Tag1.LastTimeSeen > Tag2.LastTimeSeen ? Tag1.Status : Tag2.Status; }
+            get { return Tag1.MaxCount > Tag2.MaxCount ? Tag1.Status : Tag2.Status; }
         }
-
-        private TagStatus _lastStatus;
-
-        public DualTagObject()
-        {
-            _lastStatus = TagStatus.INDEFINIDO;
-        }
-
+        
         public DateTime LTSAntenna1 { get { return Tag1.LTSAntenna1 > Tag2.LTSAntenna1 ? Tag1.LTSAntenna1 : Tag2.LTSAntenna1; } }
         public DateTime LTSAntenna2 { get { return Tag1.LTSAntenna2 > Tag2.LTSAntenna2 ? Tag1.LTSAntenna2 : Tag2.LTSAntenna2; } }
 
-        public DateTime? FTSAntenna1 { get { return Tag1.FTSAntenna1 < Tag2.FTSAntenna1 ? Tag1.FTSAntenna1 : Tag2.FTSAntenna1; } }
-        public DateTime? FTSAntenna2 { get { return Tag1.FTSAntenna2 < Tag2.FTSAntenna2 ? Tag1.FTSAntenna2 : Tag2.FTSAntenna2; } }
+        public DateTime FTSAntenna1 { get { return Tag1.FTSAntenna1 < Tag2.FTSAntenna1 ? Tag1.FTSAntenna1 : Tag2.FTSAntenna1; } }
+        public DateTime FTSAntenna2 { get { return Tag1.FTSAntenna2 < Tag2.FTSAntenna2 ? Tag1.FTSAntenna2 : Tag2.FTSAntenna2; } }
 
-        public TimeSpan? ForaHa
+        public TimeSpan? TempoAusente
         {
             get
             {
-                return Status == TagStatus.FORA
-                    ? DateTime.Now.Subtract(LTSAntenna1 > DateTime.MinValue || !FTSAntenna2.HasValue? LTSAntenna1 : FTSAntenna2.Value)
-                    : (TimeSpan?) null;
+                if (Status == TagStatus.FORA)
+                {
+                    var lastTimeDentro = LTSAntenna1;
+                    if (lastTimeDentro == DateTime.MinValue)
+                        lastTimeDentro = FTSAntenna2;
+                    return DateTime.Now.Subtract(lastTimeDentro);
+                }
+                return null;
             }
         }
 
-        public DateTime LastTimeSeen
-        {
-            get { return LTSAntenna1 > LTSAntenna2 ? LTSAntenna1 : LTSAntenna2; }
-        }
-        public TimeSpan? PerdidoHa { get { return IsLost ? DateTime.Now.Subtract(LastTimeSeen) : (TimeSpan?)null; } }
-
-        public TimeSpan? RemocaoHa
-        {
-            get
-            {
-                return HasRemocao
-                    ? DateTime.Now.Subtract(Lost1 ? Tag1.LastTimeSeen : Tag2.LastTimeSeen)
-                    : (TimeSpan?) null;
-            }
-        }
-
-        public bool Lost1 { get { return Tag1.IsLost; } }
-        public bool Lost2 { get { return Tag2.IsLost; } }
-        public bool IsLost { get { return Lost1 && Lost2; } }
-        public bool HasLoose { get { return Lost1 || Lost2; } }
-        public bool HasRemocao { get { return HasLoose && !IsLost; } }
-
-        public bool IncoerenciaStatus{get { return Tag1.Status != Tag2.Status; }}
-
-        public bool CheckStatus()
-        {
-            var status = Status;
-            var statusHasChanged = _lastStatus != status;
-            if (statusHasChanged)
-            {
-                _lastStatus = status;
-            }
-            return statusHasChanged;
-        }
+        public bool IsPresente { get { return !Tag1.IsLost || !Tag2.IsLost; } }
+        public bool IsRemovida { get { return IsPresente && (Tag1.IsLost || Tag2.IsLost); } }
 
         public DualTagObjectDetail[] GetDetails()
         {
@@ -81,14 +48,26 @@ namespace MercadinhoRFID.Monitor.Object
                 new DualTagObjectDetail("Identificação", Id.ToString(CultureInfo.InvariantCulture)), 
                 new DualTagObjectDetail("EPC Interno", Tag1.EpcLongo), 
                 new DualTagObjectDetail("EPC Externo", Tag2.EpcLongo), 
-                new DualTagObjectDetail("Estado Geral", IsLost ? "Perdido" : Status.ToString()), 
+                new DualTagObjectDetail("Estado Geral", IsPresente ? Status.ToString() : "Perdido"), 
                 new DualTagObjectDetail("Etiqueta Int.", Tag1.IsLost ? "Perdida" : Tag1.Status.ToString()), 
                 new DualTagObjectDetail("Etiqueta Int. - Dentro", Tag1.LTSAntenna1 > DateTime.MinValue ? Tag1.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
                 new DualTagObjectDetail("Etiqueta Int. - Fora", Tag1.LTSAntenna2 > DateTime.MinValue ? Tag1.LTSAntenna2.Subtract(now).ToString() : string.Empty), 
                 new DualTagObjectDetail("Etiqueta Ext.", Tag2.IsLost ? "Perdida" : Tag2.Status.ToString()), 
                 new DualTagObjectDetail("Etiqueta Ext. - Dentro", Tag2.LTSAntenna1 > DateTime.MinValue ? Tag2.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
-                new DualTagObjectDetail("Etiqueta Ext. - Fora", Tag2.LTSAntenna2 > DateTime.MinValue ? Tag2.LTSAntenna2.Subtract(now).ToString() : string.Empty), 
+                new DualTagObjectDetail("Etiqueta Ext. - Fora", Tag2.LTSAntenna2 > DateTime.MinValue ? Tag2.LTSAntenna2.Subtract(now).ToString() : string.Empty)
             };
+        }
+
+        public bool CheckStatus()
+        {
+            Tag1.CheckStatus();
+            Tag2.CheckStatus();
+            var ret = Status != _lastStatus;
+            if (ret)
+            {
+                _lastStatus = Status;
+            }
+            return ret;
         }
     }
 

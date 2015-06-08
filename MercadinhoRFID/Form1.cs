@@ -90,7 +90,6 @@ namespace MercadinhoRFID
             _monitor = new DualTagMonitor(tagsFileName, ConfigFileName);
             _monitor.DualTagMonitorChange += DualTagMonitorChangeHandler;
             _monitor.DualTagMonitorLost += DualTagMonitorLostHandler;
-            _monitor.DualTagMonitorIncoerente += DualTagMonitorIncoerenteHandler;
             _monitor.DualTagMonitorRemocao += DualTagMonitorRemocao;
             dataGridView1.DataSource = new BindingList<DualTagObject>(_monitor.DualTagsObject);
         }
@@ -107,16 +106,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0} foi {1}", args.Id, args.HasLoose ? "Perdido" : "Encontrado");
-                DoLog(logLine);
-            }));
-        }
-        private void DualTagMonitorIncoerenteHandler(object sender, DualTagObject args)
-        {
-            Invoke(new MethodInvoker(delegate
-            {
-                var logLine = string.Format("Item {0} foi {1}. {2} / {3}", args.Id, args.IncoerenciaStatus ? "Incoerente" : "Coerente",
-                    args.Tag1.Status, args.Tag2.Status);
+                var logLine = string.Format("Item {0} foi {1}", args.Id, args.IsPresente ? "Presente" : "Sem Leitura");
                 DoLog(logLine);
             }));
         }
@@ -124,7 +114,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, args.Lost1 ? "Interna" : "Externa");
+                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, args.Tag1.IsLost ? "Interna" : "Externa");
                 DoLog(logLine);
             }));
         }
@@ -176,10 +166,6 @@ namespace MercadinhoRFID
             if (dualTagObject.Status == TagStatus.FORA)
             {
                 row.DefaultCellStyle.BackColor = Color.Yellow;
-            }
-            if (dualTagObject.IsLost)
-            {
-                row.DefaultCellStyle.BackColor = Color.Red;
             }
         }
 

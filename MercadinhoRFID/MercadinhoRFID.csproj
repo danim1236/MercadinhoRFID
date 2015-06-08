@@ -50,12 +50,6 @@
     <Compile Include="CfgAddress.Designer.cs">
       <DependentUpon>CfgAddress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Antigo\Form1Antigo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Antigo\Form1Antigo.Designer.cs">
-      <DependentUpon>Form1Antigo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,9 +66,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CfgAddress.resx">
       <DependentUpon>CfgAddress.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Antigo\Form1Antigo.resx">
-      <DependentUpon>Form1Antigo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -35,13 +35,6 @@ namespace MercadinhoRFID
             this.button2 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ForaHa = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.hasLostDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.HasRemocao = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dualTagObjectBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dualTagObjectDetailBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -51,14 +44,20 @@ namespace MercadinhoRFID
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuDetalhe = new System.Windows.Forms.ToolStripMenuItem();
+            this.dualTagObjectBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dualTagObjectDetailBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ForaHa = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HasRemocao = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectDetailBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectDetailBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -105,7 +104,6 @@ namespace MercadinhoRFID
             this.idDataGridViewTextBoxColumn,
             this.statusDataGridViewTextBoxColumn,
             this.ForaHa,
-            this.hasLostDataGridViewCheckBoxColumn,
             this.HasRemocao});
             this.dataGridView1.DataSource = this.dualTagObjectBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(4, 3);
@@ -115,55 +113,6 @@ namespace MercadinhoRFID
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridView1_RowPrePaint);
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "Máquina";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Estado";
-            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
-            this.statusDataGridViewTextBoxColumn.Width = 70;
-            // 
-            // ForaHa
-            // 
-            this.ForaHa.DataPropertyName = "ForaHa";
-            this.ForaHa.HeaderText = "Tempo Ausente";
-            this.ForaHa.Name = "ForaHa";
-            this.ForaHa.ReadOnly = true;
-            this.ForaHa.Width = 105;
-            // 
-            // hasLostDataGridViewCheckBoxColumn
-            // 
-            this.hasLostDataGridViewCheckBoxColumn.DataPropertyName = "IsLost";
-            this.hasLostDataGridViewCheckBoxColumn.HeaderText = "Presente";
-            this.hasLostDataGridViewCheckBoxColumn.MinimumWidth = 60;
-            this.hasLostDataGridViewCheckBoxColumn.Name = "hasLostDataGridViewCheckBoxColumn";
-            this.hasLostDataGridViewCheckBoxColumn.ReadOnly = true;
-            this.hasLostDataGridViewCheckBoxColumn.Width = 60;
-            // 
-            // HasRemocao
-            // 
-            this.HasRemocao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.HasRemocao.DataPropertyName = "HasRemocao";
-            this.HasRemocao.HeaderText = "Etiqueta Removida";
-            this.HasRemocao.Name = "HasRemocao";
-            this.HasRemocao.ReadOnly = true;
-            // 
-            // dualTagObjectBindingSource
-            // 
-            this.dualTagObjectBindingSource.DataSource = typeof(MercadinhoRFID.Monitor.Object.DualTagObject);
-            // 
-            // dualTagObjectDetailBindingSource
-            // 
-            this.dualTagObjectDetailBindingSource.DataSource = typeof(MercadinhoRFID.Monitor.Object.DualTagObjectDetail);
             // 
             // panel1
             // 
@@ -257,6 +206,46 @@ namespace MercadinhoRFID
             this.MenuDetalhe.Visible = false;
             this.MenuDetalhe.Click += new System.EventHandler(this.MenuDetalhe_Click);
             // 
+            // dualTagObjectBindingSource
+            // 
+            this.dualTagObjectBindingSource.DataSource = typeof(MercadinhoRFID.Monitor.Object.DualTagObject);
+            // 
+            // dualTagObjectDetailBindingSource
+            // 
+            this.dualTagObjectDetailBindingSource.DataSource = typeof(MercadinhoRFID.Monitor.Object.DualTagObjectDetail);
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Máquina";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.HeaderText = "Estado";
+            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
+            this.statusDataGridViewTextBoxColumn.Width = 70;
+            // 
+            // ForaHa
+            // 
+            this.ForaHa.DataPropertyName = "TempoAusente";
+            this.ForaHa.HeaderText = "Tempo Ausente";
+            this.ForaHa.Name = "ForaHa";
+            this.ForaHa.ReadOnly = true;
+            this.ForaHa.Width = 105;
+            // 
+            // HasRemocao
+            // 
+            this.HasRemocao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HasRemocao.DataPropertyName = "IsRemovida";
+            this.HasRemocao.HeaderText = "Etiqueta Removida";
+            this.HasRemocao.Name = "HasRemocao";
+            this.HasRemocao.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -276,14 +265,14 @@ namespace MercadinhoRFID
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectDetailBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dualTagObjectDetailBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,13 +293,13 @@ namespace MercadinhoRFID
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn hasLostDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem MenuDetalhe;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ForaHa;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn hasLostDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn HasRemocao;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem MenuDetalhe;
     }
 }
 
