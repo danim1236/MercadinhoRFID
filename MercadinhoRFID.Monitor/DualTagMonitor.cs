@@ -85,7 +85,7 @@ namespace MercadinhoRFID.Monitor
             _remocao = _dualTagsObject.ToDictionary(_ => _.Id, _ => false);
             _driver = new R220Continuous(Configuration);
             _driver.TagsReported += TagsReported;
-            _timer = new Timer(500);
+            _timer = new Timer(1000);
             _timer.Elapsed += Elapsed;
         }
 

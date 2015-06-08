@@ -15,12 +15,12 @@ namespace MercadinhoRFID.Monitor.Object
         {
             get { return Tag1.MaxCount > Tag2.MaxCount ? Tag1.Status : Tag2.Status; }
         }
-        
-        public DateTime LTSAntenna1 { get { return Tag1.LTSAntenna1 > Tag2.LTSAntenna1 ? Tag1.LTSAntenna1 : Tag2.LTSAntenna1; } }
-        public DateTime LTSAntenna2 { get { return Tag1.LTSAntenna2 > Tag2.LTSAntenna2 ? Tag1.LTSAntenna2 : Tag2.LTSAntenna2; } }
 
-        public DateTime FTSAntenna1 { get { return Tag1.FTSAntenna1 < Tag2.FTSAntenna1 ? Tag1.FTSAntenna1 : Tag2.FTSAntenna1; } }
-        public DateTime FTSAntenna2 { get { return Tag1.FTSAntenna2 < Tag2.FTSAntenna2 ? Tag1.FTSAntenna2 : Tag2.FTSAntenna2; } }
+        public DateTime LastTimeDentro { get { return Tag1.LastTimeDentro > Tag2.LastTimeDentro ? Tag1.LastTimeDentro : Tag2.LastTimeDentro; } }
+        public DateTime LastTimeFora { get { return Tag1.LastTimeFora > Tag2.LastTimeFora ? Tag1.LastTimeFora : Tag2.LastTimeFora; } }
+
+        public DateTime FirstTimeDentro { get { return Tag1.FirstTimeDentro < Tag2.FirstTimeDentro ? Tag1.FirstTimeDentro : Tag2.FirstTimeDentro; } }
+        public DateTime FirstTimeFora { get { return Tag1.FirstTimeFora < Tag2.FirstTimeFora ? Tag1.FirstTimeFora : Tag2.FirstTimeFora; } }
 
         public TimeSpan? TempoAusente
         {
@@ -28,9 +28,9 @@ namespace MercadinhoRFID.Monitor.Object
             {
                 if (Status == TagStatus.FORA)
                 {
-                    var lastTimeDentro = LTSAntenna1;
+                    var lastTimeDentro = LastTimeDentro;
                     if (lastTimeDentro == DateTime.MinValue)
-                        lastTimeDentro = FTSAntenna2;
+                        lastTimeDentro = FirstTimeFora;
                     return DateTime.Now.Subtract(lastTimeDentro);
                 }
                 return null;
@@ -42,19 +42,22 @@ namespace MercadinhoRFID.Monitor.Object
 
         public DualTagObjectDetail[] GetDetails()
         {
-            var now = DateTime.Now;
             return new []
             {
                 new DualTagObjectDetail("Identificação", Id.ToString(CultureInfo.InvariantCulture)), 
                 new DualTagObjectDetail("EPC Interno", Tag1.EpcLongo), 
                 new DualTagObjectDetail("EPC Externo", Tag2.EpcLongo), 
                 new DualTagObjectDetail("Estado Geral", IsPresente ? Status.ToString() : "Perdido"), 
-                new DualTagObjectDetail("Etiqueta Int.", Tag1.IsLost ? "Perdida" : Tag1.Status.ToString()), 
-                new DualTagObjectDetail("Etiqueta Int. - Dentro", Tag1.LTSAntenna1 > DateTime.MinValue ? Tag1.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
-                new DualTagObjectDetail("Etiqueta Int. - Fora", Tag1.LTSAntenna2 > DateTime.MinValue ? Tag1.LTSAntenna2.Subtract(now).ToString() : string.Empty), 
-                new DualTagObjectDetail("Etiqueta Ext.", Tag2.IsLost ? "Perdida" : Tag2.Status.ToString()), 
-                new DualTagObjectDetail("Etiqueta Ext. - Dentro", Tag2.LTSAntenna1 > DateTime.MinValue ? Tag2.LTSAntenna1.Subtract(now).ToString() : string.Empty), 
-                new DualTagObjectDetail("Etiqueta Ext. - Fora", Tag2.LTSAntenna2 > DateTime.MinValue ? Tag2.LTSAntenna2.Subtract(now).ToString() : string.Empty)
+                new DualTagObjectDetail("Estado Tag1", IsPresente ? Tag1.Status.ToString() : "Perdido"), 
+                new DualTagObjectDetail("Contagem Tag1 - Dentro", Tag1.Count1.ToString(CultureInfo.InvariantCulture)), 
+                new DualTagObjectDetail("Contagem Tag1 - Fora", Tag1.Count2.ToString(CultureInfo.InvariantCulture)), 
+                new DualTagObjectDetail("Last Tag1 - Dentro", Tag1.LastTimeDentro.ToString("T")), 
+                new DualTagObjectDetail("Last Tag1 - Fora", Tag1.LastTimeFora.ToString("T")), 
+                new DualTagObjectDetail("Estado Tag2", IsPresente ? Tag2.Status.ToString() : "Perdido"), 
+                new DualTagObjectDetail("Contagem Tag2 - Dentro", Tag2.Count1.ToString(CultureInfo.InvariantCulture)), 
+                new DualTagObjectDetail("Contagem Tag2 - Fora", Tag2.Count2.ToString(CultureInfo.InvariantCulture)),
+                new DualTagObjectDetail("Last Tag2 - Dentro", Tag2.LastTimeDentro.ToString("T")), 
+                new DualTagObjectDetail("Last Tag2 - Fora", Tag2.LastTimeFora.ToString("T"))
             };
         }
 
