@@ -69,18 +69,7 @@ namespace MercadinhoRFID
             Invoke(new MethodInvoker(() =>
             {
                 dataGridView1.Refresh();
-                if (_monitor.AlgumPerdido)
-                {
-                    button3.BackColor = Color.Red;
-                }
-                else if (_monitor.AlgumFora)
-                {
-                    button3.BackColor = Color.Yellow;
-                }
-                else
-                {
-                    button3.BackColor = Color.White;
-                }
+                button3.BackColor = _monitor.AlgumFora ? Color.Yellow : Color.White;
             }));
         }
         

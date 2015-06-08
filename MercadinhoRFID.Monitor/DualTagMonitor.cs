@@ -24,7 +24,6 @@ namespace MercadinhoRFID.Monitor
         }
 
         public R220Configuration Configuration { get; set; }
-        public bool AlgumPerdido { get { return _presente.Values.Any(_ => _); } }
         public bool AlgumFora { get { return _dualTagsObject.Any(_ => _.Status == TagStatus.FORA); } }
 
         public DualTagMonitor(string tagsFileName, string cfgFileName)
