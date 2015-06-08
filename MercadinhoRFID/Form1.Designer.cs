@@ -50,6 +50,7 @@ namespace MercadinhoRFID
             this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ForaHa = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HasRemocao = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.IsPresente = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -89,7 +90,7 @@ namespace MercadinhoRFID
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(495, 212);
+            this.listBox1.Size = new System.Drawing.Size(516, 212);
             this.listBox1.TabIndex = 2;
             // 
             // dataGridView1
@@ -104,12 +105,13 @@ namespace MercadinhoRFID
             this.idDataGridViewTextBoxColumn,
             this.statusDataGridViewTextBoxColumn,
             this.ForaHa,
-            this.HasRemocao});
+            this.HasRemocao,
+            this.IsPresente});
             this.dataGridView1.DataSource = this.dualTagObjectBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(4, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(405, 155);
+            this.dataGridView1.Size = new System.Drawing.Size(426, 155);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridView1_RowPrePaint);
@@ -120,7 +122,7 @@ namespace MercadinhoRFID
             this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Location = new System.Drawing.Point(95, 13);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(416, 165);
+            this.panel1.Size = new System.Drawing.Size(437, 165);
             this.panel1.TabIndex = 5;
             // 
             // panel2
@@ -131,7 +133,7 @@ namespace MercadinhoRFID
             this.panel2.Controls.Add(this.listBox1);
             this.panel2.Location = new System.Drawing.Point(6, 184);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(505, 228);
+            this.panel2.Size = new System.Drawing.Size(526, 228);
             this.panel2.TabIndex = 6;
             // 
             // panel4
@@ -192,7 +194,7 @@ namespace MercadinhoRFID
             this.MenuDetalhe});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(519, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(538, 24);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -236,7 +238,7 @@ namespace MercadinhoRFID
             this.ForaHa.HeaderText = "Tempo Ausente";
             this.ForaHa.Name = "ForaHa";
             this.ForaHa.ReadOnly = true;
-            this.ForaHa.Width = 105;
+            this.ForaHa.Width = 110;
             // 
             // HasRemocao
             // 
@@ -246,11 +248,19 @@ namespace MercadinhoRFID
             this.HasRemocao.Name = "HasRemocao";
             this.HasRemocao.ReadOnly = true;
             // 
+            // IsPresente
+            // 
+            this.IsPresente.DataPropertyName = "IsPresente";
+            this.IsPresente.HeaderText = "Presente";
+            this.IsPresente.Name = "IsPresente";
+            this.IsPresente.ReadOnly = true;
+            this.IsPresente.Width = 80;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(519, 417);
+            this.ClientSize = new System.Drawing.Size(538, 417);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
@@ -300,6 +310,7 @@ namespace MercadinhoRFID
         private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ForaHa;
         private System.Windows.Forms.DataGridViewCheckBoxColumn HasRemocao;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn IsPresente;
     }
 }
 

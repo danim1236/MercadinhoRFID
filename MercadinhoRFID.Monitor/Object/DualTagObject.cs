@@ -22,7 +22,7 @@ namespace MercadinhoRFID.Monitor.Object
         public DateTime FirstTimeDentro { get { return Tag1.FirstTimeDentro < Tag2.FirstTimeDentro ? Tag1.FirstTimeDentro : Tag2.FirstTimeDentro; } }
         public DateTime FirstTimeFora { get { return Tag1.FirstTimeFora < Tag2.FirstTimeFora ? Tag1.FirstTimeFora : Tag2.FirstTimeFora; } }
 
-        public TimeSpan? TempoAusente
+        public string TempoAusente
         {
             get
             {
@@ -31,14 +31,16 @@ namespace MercadinhoRFID.Monitor.Object
                     var lastTimeDentro = LastTimeDentro;
                     if (lastTimeDentro == DateTime.MinValue)
                         lastTimeDentro = FirstTimeFora;
-                    return DateTime.Now.Subtract(lastTimeDentro);
+                    var tempoAusente = DateTime.Now.Subtract(lastTimeDentro);
+
+                    return string.Format("{0} {1:00}:{2:00}:{3:00}", tempoAusente.Days, tempoAusente.Hours,tempoAusente.Minutes, tempoAusente.Seconds);
                 }
                 return null;
             }
         }
 
-        public bool IsPresente { get { return !Tag1.IsLost || !Tag2.IsLost; } }
-        public bool IsRemovida { get { return IsPresente && (Tag1.IsLost || Tag2.IsLost); } }
+        public bool IsPresente { get { return Tag1.IsPresente|| Tag2.IsPresente; } }
+        public bool IsRemovida { get { return Tag1.IsPresente ^ Tag2.IsPresente; } }
 
         public DualTagObjectDetail[] GetDetails()
         {

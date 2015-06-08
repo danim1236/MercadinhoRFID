@@ -61,7 +61,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView2.Size = new System.Drawing.Size(357, 273);
+            this.dataGridView2.Size = new System.Drawing.Size(357, 311);
             this.dataGridView2.TabIndex = 4;
             // 
             // chaveDataGridViewTextBoxColumn
@@ -90,14 +90,14 @@
             this.panel3.Controls.Add(this.dataGridView2);
             this.panel3.Location = new System.Drawing.Point(12, 12);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(367, 283);
+            this.panel3.Size = new System.Drawing.Size(367, 321);
             this.panel3.TabIndex = 7;
             // 
             // DetalheMaquina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 307);
+            this.ClientSize = new System.Drawing.Size(390, 345);
             this.ControlBox = false;
             this.Controls.Add(this.panel3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;

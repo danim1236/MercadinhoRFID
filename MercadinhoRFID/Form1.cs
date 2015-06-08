@@ -103,7 +103,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, args.Tag1.IsLost ? "Interna" : "Externa");
+                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, !args.Tag1.IsPresente? "Interna" : "Externa");
                 DoLog(logLine);
             }));
         }

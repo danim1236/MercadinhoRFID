@@ -57,10 +57,7 @@ namespace MercadinhoRFID.Monitor.Object
 
         public int MaxCount { get; private set; }
 
-        public bool IsLost
-        {
-            get { return Count1 == 0 && Count2 == 0; }
-        }
+        public bool IsPresente { get; private set; }
 
         private volatile int _count1;
         private volatile int _count2;
@@ -73,7 +70,8 @@ namespace MercadinhoRFID.Monitor.Object
         {
             lock (_lock)
             {
-                if (_count1 > 0 || _count2 > 0)
+                IsPresente = _count1 > 0 || _count2 > 0;
+                if (IsPresente)
                 {
                     if (_count1 > _count2)
                     {
