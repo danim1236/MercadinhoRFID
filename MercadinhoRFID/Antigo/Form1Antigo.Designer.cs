@@ -1,6 +1,6 @@
 ﻿namespace MercadinhoRFID.Antigo
 {
-    partial class Form1Antigo
+    partial class DetalheMaquina
     {
         /// <summary>
         /// Required designer variable.

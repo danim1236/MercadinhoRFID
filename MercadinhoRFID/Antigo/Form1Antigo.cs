@@ -11,7 +11,7 @@ using MercadinhoRFID.Monitor.Object;
 
 namespace MercadinhoRFID.Antigo
 {
-    public partial class Form1Antigo : Form
+    public partial class DetalheMaquina : Form
     {
         private DualTagMonitor _monitor;
         private System.Timers.Timer _timer;
@@ -37,7 +37,7 @@ namespace MercadinhoRFID.Antigo
             get { return Path.Combine(RootPath, "Resources", "cfg.txt"); }
         }
 
-        public Form1Antigo()
+        public DetalheMaquina()
         {
             InitializeComponent();
         }

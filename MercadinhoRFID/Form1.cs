@@ -15,7 +15,7 @@ namespace MercadinhoRFID
     {
         private DualTagMonitor _monitor;
         private System.Timers.Timer _timer;
-        private DualTagObject _current;
+        public DualTagObject Current { get; private set; }
 
         public string RootPath
         {
@@ -45,16 +45,13 @@ namespace MercadinhoRFID
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadMonitor();
-            _current = _monitor.DualTagsObject.First();
+            Current = _monitor.DualTagsObject.First();
             _timer = new System.Timers.Timer(250);
             _timer.Elapsed += Elapsed;
 
+            DetalheMaquina.MainWindow = this;
             LoadLog();
             DoLog("Aplicação Iniciada");
-            dataGridView2.DataSource = new[]
-            {
-                new DualTagObjectDetail("Clique uma linha acima ", "para exibir detalhes")
-            };
         }
 
         private void LoadLog()
@@ -84,11 +81,9 @@ namespace MercadinhoRFID
                 {
                     button3.BackColor = Color.White;
                 }
-                dataGridView2.DataSource = _current.GetDetails();
             }));
         }
-
-
+        
         private void LoadMonitor()
         {
             var tagsFileName = Path.Combine(RootPath, "Resources", "dual_tag_epcs.txt");
@@ -166,6 +161,7 @@ namespace MercadinhoRFID
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            DetalheMaquina.Instance.Stop();
             DoLog("Aplicação Finalizada");
         }
 
@@ -190,8 +186,7 @@ namespace MercadinhoRFID
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             var row = dataGridView1.Rows[e.RowIndex];
-            _current = (DualTagObject)row.DataBoundItem;
-            dataGridView2.DataSource = _current.GetDetails();
+            Current = (DualTagObject)row.DataBoundItem;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -213,6 +208,11 @@ namespace MercadinhoRFID
                 File.WriteAllLines(ConfigFileName, new [] {ipAdress});
                 _monitor.Address = ipAdress;
             }
+        }
+
+        private void MenuDetalhe_Click(object sender, EventArgs e)
+        {
+            DetalheMaquina.Instance.Show();
         }
     }
 }
