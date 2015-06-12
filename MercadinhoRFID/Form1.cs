@@ -62,8 +62,9 @@ namespace MercadinhoRFID
                 panel4.Visible = false;
                 panel5.Size = new Size(83, 165);
             }
-            else
+            else if(FormLogin.TryLogin())
             {
+
                 panel4.Visible = true;
                 panel5.Size = new Size(83, 37);
             }
