@@ -95,6 +95,7 @@ namespace MercadinhoRFID.Monitor.Object
             }
         }
         public TagStatus Status { get; set; }
+
         public int Count1 { get; private set; }
         public int Count2 { get; private set; }
     }

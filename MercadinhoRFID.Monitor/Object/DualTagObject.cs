@@ -8,12 +8,30 @@ namespace MercadinhoRFID.Monitor.Object
         private TagStatus _lastStatus;
         public int Id { get; set; }
 
+        public string Nome { get; set; }
+
         public TagObject Tag1 { get; set; }
         public TagObject Tag2 { get; set; }
 
         public TagStatus Status
         {
             get { return Tag1.MaxCount > Tag2.MaxCount ? Tag1.Status : Tag2.Status; }
+        }
+
+        public string StatusString
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case TagStatus.DENTRO:
+                        return "PRESENTE";
+                    case TagStatus.FORA:
+                        return "AUSENTE";
+                    default:
+                        return string.Empty;
+                }
+            }
         }
 
         public DateTime LastTimeDentro { get { return Tag1.LastTimeDentro > Tag2.LastTimeDentro ? Tag1.LastTimeDentro : Tag2.LastTimeDentro; } }

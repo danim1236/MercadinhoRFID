@@ -218,7 +218,7 @@ namespace MercadinhoRFID
             // 
             // idDataGridViewTextBoxColumn
             // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Nome";
             this.idDataGridViewTextBoxColumn.HeaderText = "Máquina";
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
             this.idDataGridViewTextBoxColumn.ReadOnly = true;
@@ -226,7 +226,7 @@ namespace MercadinhoRFID
             // 
             // statusDataGridViewTextBoxColumn
             // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "StatusString";
             this.statusDataGridViewTextBoxColumn.HeaderText = "Estado";
             this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
             this.statusDataGridViewTextBoxColumn.ReadOnly = true;
@@ -235,7 +235,7 @@ namespace MercadinhoRFID
             // ForaHa
             // 
             this.ForaHa.DataPropertyName = "TempoAusente";
-            this.ForaHa.HeaderText = "Tempo Ausente";
+            this.ForaHa.HeaderText = "Ausente por";
             this.ForaHa.Name = "ForaHa";
             this.ForaHa.ReadOnly = true;
             this.ForaHa.Width = 110;
@@ -251,7 +251,7 @@ namespace MercadinhoRFID
             // IsPresente
             // 
             this.IsPresente.DataPropertyName = "IsPresente";
-            this.IsPresente.HeaderText = "Presente";
+            this.IsPresente.HeaderText = "Detectado";
             this.IsPresente.Name = "IsPresente";
             this.IsPresente.ReadOnly = true;
             this.IsPresente.Width = 80;

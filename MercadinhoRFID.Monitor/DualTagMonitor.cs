@@ -53,17 +53,18 @@ namespace MercadinhoRFID.Monitor
             int count = 1;
             return (from line in lines
                 let parts = line.Split(new[] {' ', '\t', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)
-                where parts.Length == 2
+                where parts.Length == 3
                 select new DualTagObject
                 {
                     Id = count++,
+                    Nome = parts[0],
                     Tag1 = new TagObject
                     {
-                        Epc = parts[0].Replace("-", "")
+                        Epc = parts[1].Replace("-", "")
                     },
                     Tag2 = new TagObject
                     {
-                        Epc = parts[1].Replace("-", "")
+                        Epc = parts[2].Replace("-", "")
                     }
                 }).ToArray();
         }

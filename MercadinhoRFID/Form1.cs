@@ -87,7 +87,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0} está {1}", args.Id, args.Status);
+                var logLine = string.Format("Item {0} está {1}", args.Nome, args.StatusString);
                 DoLog(logLine);
             }));
         }
@@ -95,7 +95,7 @@ namespace MercadinhoRFID
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0} foi {1}", args.Id, args.IsPresente ? "Presente" : "Sem Leitura");
+                var logLine = string.Format("Item {0} {1} foi detectado", args.Id, args.IsPresente ? string.Empty : "não");
                 DoLog(logLine);
             }));
         }
