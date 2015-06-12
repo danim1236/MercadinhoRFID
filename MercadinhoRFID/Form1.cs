@@ -44,6 +44,7 @@ namespace MercadinhoRFID
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            panel5.Size = new Size(83, 165);
             LoadMonitor();
             Current = _monitor.DualTagsObject.First();
             _timer = new System.Timers.Timer(250);
@@ -52,6 +53,20 @@ namespace MercadinhoRFID
             DetalheMaquina.MainWindow = this;
             LoadLog();
             DoLog("Aplicação Iniciada");
+        }
+
+        public void ToggleSuper()
+        {
+            if (panel4.Visible)
+            {
+                panel4.Visible = false;
+                panel5.Size = new Size(83, 165);
+            }
+            else
+            {
+                panel4.Visible = true;
+                panel5.Size = new Size(83, 37);
+            }
         }
 
         private void LoadLog()
@@ -188,6 +203,11 @@ namespace MercadinhoRFID
         private void MenuDetalhe_Click(object sender, EventArgs e)
         {
             DetalheMaquina.Instance.Show();
+        }
+
+        private void MenuSuperUsuario_Click(object sender, EventArgs e)
+        {
+            ToggleSuper();
         }
     }
 }
