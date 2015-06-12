@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MercadinhoRFID
@@ -73,14 +75,13 @@ namespace MercadinhoRFID
                 DialogResult = DialogResult.Cancel;
         }
 
-        public static bool TryLogin()
+        public static bool TryLogin(string loginFileName)
         {
-            var logins = new Dictionary<string, string>
-            {
-                {"danim", "danim123"},
-                {"grivet", "grivet123"},
-                {"mandina", "mandina123"}
-            };
+            var logins = 
+                (from line in File.ReadAllLines(loginFileName)
+                 let parts = line.Split(new[] {' ', '\t', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)
+                 where parts.Length == 2
+                 select new {Key=parts[0], Value=parts[1]}).ToDictionary(_ => _.Key, _=>_.Value);
             var login = new FormLogin();
             if (login.ShowDialog() == DialogResult.OK)
             {

@@ -110,6 +110,9 @@
     <Content Include="Resources\dual_tag_epcs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\login.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MercadinhoRFID.Monitor\MercadinhoRFID.Monitor.csproj">

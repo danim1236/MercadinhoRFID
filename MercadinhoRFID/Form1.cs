@@ -37,6 +37,11 @@ namespace MercadinhoRFID
             get { return Path.Combine(RootPath, "Resources", "cfg.txt"); }
         }
 
+        public string LoginFileName
+        {
+            get { return Path.Combine(RootPath, "Resources", "login.txt"); }
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -62,7 +67,7 @@ namespace MercadinhoRFID
                 panel4.Visible = false;
                 panel5.Size = new Size(83, 165);
             }
-            else if(FormLogin.TryLogin())
+            else if(FormLogin.TryLogin(LoginFileName))
             {
 
                 panel4.Visible = true;
