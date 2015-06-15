@@ -8,6 +8,34 @@ namespace MercadinhoRFID
 {
     public partial class DetalheMaquina : Form
     {
+        public static bool IsShown{get { return _instance != null; }}
+
+        public static void ShowForm()
+        {
+            Instance.Show();
+        }
+
+        public static void HideForm()
+        {
+            if (IsShown)
+            {
+                _instance.Close();
+                _instance = null;
+            }
+        }
+
+        public static void ToggleShow()
+        {
+            if (IsShown)
+            {
+                HideForm();
+            }
+            else
+            {
+                ShowForm();
+            }
+        }
+
         public static Form1 MainWindow { get; set; }
 
         public static DetalheMaquina Instance
@@ -17,7 +45,7 @@ namespace MercadinhoRFID
 
         private System.Timers.Timer _timer;
         private static DetalheMaquina _instance;
-
+        
         public string RootPath
         {
             get
@@ -58,9 +86,17 @@ namespace MercadinhoRFID
             }));
         }
 
-        public void Stop()
+        private void DetalheMaquina_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _timer.Stop();
+            if (_timer != null)
+            {
+                _timer.Stop();
+            }
+        }
+
+        private void MenuDetalhe_Click(object sender, EventArgs e)
+        {
+            ToggleShow();
         }
     }
 }

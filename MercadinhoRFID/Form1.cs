@@ -4,8 +4,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
+using Impinj.OctaneSdk;
 using MercadinhoRFID.Monitor;
 using MercadinhoRFID.Monitor.Object;
 
@@ -16,6 +18,7 @@ namespace MercadinhoRFID
         private DualTagMonitor _monitor;
         private System.Timers.Timer _timer;
         public DualTagObject Current { get; private set; }
+        private bool _closing;
 
         public string RootPath
         {
@@ -53,7 +56,6 @@ namespace MercadinhoRFID
             LoadMonitor();
             Current = _monitor.DualTagsObject.First();
             _timer = new System.Timers.Timer(250);
-            _timer.Elapsed += Elapsed;
 
             DetalheMaquina.MainWindow = this;
             LoadLog();
@@ -67,7 +69,7 @@ namespace MercadinhoRFID
                 panel4.Visible = false;
                 panel5.Size = new Size(83, 165);
             }
-            else if(FormLogin.TryLogin(LoginFileName))
+            else if (FormLogin.TryLogin(LoginFileName))
             {
 
                 panel4.Visible = true;
@@ -87,13 +89,16 @@ namespace MercadinhoRFID
 
         private void Elapsed(object sender, ElapsedEventArgs e)
         {
-            Invoke(new MethodInvoker(() =>
+            if (!_closing)
             {
-                dataGridView1.Refresh();
-                button3.BackColor = _monitor.AlgumFora ? Color.Yellow : Color.White;
-            }));
+                Invoke(new MethodInvoker(() =>
+                {
+                    dataGridView1.Refresh();
+                    button3.BackColor = _monitor.AlgumFora ? Color.Yellow : Color.White;
+                }));
+            }
         }
-        
+
         private void LoadMonitor()
         {
             var tagsFileName = Path.Combine(RootPath, "Resources", "dual_tag_epcs.txt");
@@ -112,57 +117,87 @@ namespace MercadinhoRFID
                 DoLog(logLine);
             }));
         }
+
         private void DualTagMonitorLostHandler(object sender, DualTagObject args)
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0} {1} foi detectado", args.Id, args.IsPresente ? string.Empty : "não");
+                var logLine = string.Format("Item {0} {1} foi detectado", args.Id,
+                    args.IsPresente ? string.Empty : "não");
                 DoLog(logLine);
             }));
         }
+
         private void DualTagMonitorRemocao(object sender, DualTagObject args)
         {
             Invoke(new MethodInvoker(delegate
             {
-                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id, !args.Tag1.IsPresente? "Interna" : "Externa");
+                var logLine = string.Format("Item {0}: A etiqueta {1} foi removida.", args.Id,
+                    !args.Tag1.IsPresente ? "Interna" : "Externa");
                 DoLog(logLine);
             }));
         }
+
         private void DoLog(string logLine)
         {
-            logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - {1}", DateTime.Now, logLine);
-            File.AppendAllLines(LogFileName, new[] {logLine});
+            logLine = WriteLog(logLine);
             listBox1.Items.Add(logLine);
             listBox1.Refresh();
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public string WriteLog(string logLine)
         {
-            ControlBox = false;
-            _timer.Start();
-            _monitor.Start();
-            button1.Enabled = false;
-            button2.Enabled = true;
-            button5.Enabled = false;
-            DoLog("Aquisição Iniciada");
+            logLine = string.Format("{0:dd/MM/yyyy HH:mm:ss} - {1}", DateTime.Now, logLine);
+            File.AppendAllLines(LogFileName, new[] {logLine});
+            return logLine;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            Start();
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
+        private void Start()
+        {
+            try
+            {
+                _timer.Elapsed += Elapsed;
+                _timer.Start();
+                _monitor.Start();
+                button1.Enabled = false;
+                button2.Enabled = true;
+                button5.Enabled = false;
+                DoLog("Aquisição Iniciada");
+            }
+            catch (OctaneSdkException e)
+            {
+                _monitor.Stop();
+                _timer.Elapsed -= Elapsed;
+                _timer.Stop();
+                WriteLog(e.Message);
+            }
+            catch (SystemException e)
+            {
+                WriteLog(e.Message);
+            }
+        }
+
+        private void Stop()
         {
             _monitor.Stop();
+            _timer.Elapsed -= Elapsed;
             _timer.Stop();
-            ControlBox = true;
+            Thread.Sleep(500);
             button1.Enabled = true;
             button2.Enabled = false;
             button5.Enabled = true;
             DoLog("Aquisição Finalizada");
-        }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            DetalheMaquina.Instance.Stop();
-            DoLog("Aplicação Finalizada");
         }
 
         private void dataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -182,7 +217,7 @@ namespace MercadinhoRFID
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             var row = dataGridView1.Rows[e.RowIndex];
-            Current = (DualTagObject)row.DataBoundItem;
+            Current = (DualTagObject) row.DataBoundItem;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -201,19 +236,34 @@ namespace MercadinhoRFID
             if (cfgAddress.ShowDialog() == DialogResult.OK)
             {
                 var ipAdress = cfgAddress.IpAddress;
-                File.WriteAllLines(ConfigFileName, new [] {ipAdress});
+                File.WriteAllLines(ConfigFileName, new[] {ipAdress});
                 _monitor.Address = ipAdress;
             }
         }
 
         private void MenuDetalhe_Click(object sender, EventArgs e)
         {
-            DetalheMaquina.Instance.Show();
+            DetalheMaquina.ToggleShow();
         }
 
         private void MenuSuperUsuario_Click(object sender, EventArgs e)
         {
             ToggleSuper();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _closing = true;
+
+            Stop();
+            DetalheMaquina.HideForm();
+            DoLog("Aplicação Finalizada");
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            // Autostart
+            Start();
         }
     }
 }

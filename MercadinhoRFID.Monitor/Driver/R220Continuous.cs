@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using Impinj.OctaneSdk;
 
 namespace MercadinhoRFID.Monitor.Driver
@@ -113,6 +114,10 @@ namespace MercadinhoRFID.Monitor.Driver
             catch (OctaneSdkException e)
             {
                 Console.WriteLine("Octane SDK Exception: {0}", e.Message);
+                MessageBox.Show(string.Format("{1}{0}{2}", Environment.NewLine,
+                    @"Erro ao acessar o leitor. Verifique se o mesmo está ligado e conectado à rede, bem como o este computador.",
+                    @"Caso esteja ligado e conectado e mesmo assim não funcione entre em contato com o suporte."),
+                    "Erro de Acesso ao Leitor RFId");
                 throw;
             }
             catch (Exception e)
