@@ -27,7 +27,7 @@ namespace MercadinhoRFID.Monitor
         public bool AlgumFora { get { return _dualTagsObject.Any(_ => _.Status == TagStatus.FORA); } }
 
         public DualTagMonitor(string tagsFileName, string cfgFileName)
-            : this(ReadFromFile(tagsFileName), LoadAddress(cfgFileName))
+            : this(ReadFromFile(tagsFileName), LoadConfig(cfgFileName))
         {
         }
 
@@ -36,15 +36,11 @@ namespace MercadinhoRFID.Monitor
             return LoadTags(tagsFileName);
         }
 
-        private static string LoadAddress(string cfgFileName)
+        private static MercadinhoConfig LoadConfig(string cfgFileName)
         {
-            string result = null;
-            if (File.Exists(cfgFileName))
-            {
-                result =
-                    File.ReadAllLines(cfgFileName).Select(_ => _.Trim()).FirstOrDefault(_ => !string.IsNullOrEmpty(_));
-            }
-            return result ?? "192.168.1.159";
+            return File.Exists(cfgFileName)
+                ? new MercadinhoConfig(File.ReadAllLines(cfgFileName))
+                : new MercadinhoConfig();
         }
 
         private static DualTagObject[] LoadTags(string tagsFileName)
@@ -69,11 +65,12 @@ namespace MercadinhoRFID.Monitor
                 }).ToArray();
         }
 
-        public DualTagMonitor(DualTagObject[] dualTagsObject, string ipAddress)
+        public DualTagMonitor(DualTagObject[] dualTagsObject, MercadinhoConfig config)
         {
             Configuration = RegistryConfig.New<R220Configuration>();
-            Address = ipAddress;
-            Configuration.IpAddress = ipAddress;
+            Address = config.IpAddress;
+            Configuration.IpAddress = config.IpAddress;
+            TagObject.IsSingleSensor = config.IsSingleSensor;
             _dualTagsObject = dualTagsObject;
             _tagsByEpc = new Dictionary<string, TagObject>();
             foreach (var dualTagObject in _dualTagsObject)

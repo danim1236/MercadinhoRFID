@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Driver\R220Continuous.cs" />
+    <Compile Include="MercadinhoConfig.cs" />
     <Compile Include="Object\DualTagObject.cs" />
     <Compile Include="Driver\Mode.cs" />
     <Compile Include="Object\TagObject.cs" />

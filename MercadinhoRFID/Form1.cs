@@ -232,12 +232,14 @@ namespace MercadinhoRFID
 
         private void button5_Click(object sender, EventArgs e)
         {
-            var cfgAddress = new CfgAddress(_monitor.Address);
+            var cfgAddress = new CfgAddress(_monitor.Address, TagObject.IsSingleSensor);
             if (cfgAddress.ShowDialog() == DialogResult.OK)
             {
                 var ipAdress = cfgAddress.IpAddress;
-                File.WriteAllLines(ConfigFileName, new[] {ipAdress});
+                var isSengleSensor = cfgAddress.IsSengleSensor;
+                File.WriteAllLines(ConfigFileName, new[] {ipAdress, isSengleSensor ? "SINGLE" : "DUAL"});
                 _monitor.Address = ipAdress;
+                TagObject.IsSingleSensor = isSengleSensor;
             }
         }
 

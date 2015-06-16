@@ -4,6 +4,7 @@ namespace MercadinhoRFID.Monitor.Object
 {
     public class TagObject
     {
+        public static bool IsSingleSensor;
         public static int StatusChangeThreshold = 500;
         public static int LostThreshold = 10*1000;
         public string Epc { get; set; }
