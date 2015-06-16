@@ -72,9 +72,11 @@ namespace MercadinhoRFID.Monitor.Object
             lock (_lock)
             {
                 IsPresente = _count1 > 0 || _count2 > 0;
-                if (IsPresente)
+                bool isDentro = IsSingleSensor ? IsPresente : _count1 > _count2;
+
+                if (IsSingleSensor || IsPresente)
                 {
-                    if (_count1 > _count2)
+                    if (isDentro)
                     {
                         Status = TagStatus.DENTRO;
                         LastTimeDentro = DateTime.Now;
@@ -88,11 +90,12 @@ namespace MercadinhoRFID.Monitor.Object
                         if (!_ftsAntenna2.HasValue)
                             _ftsAntenna2 = DateTime.Now;
                     }
-                    MaxCount = Math.Max(_count1, _count2);
-                    Count1 = _count1;
-                    Count2 = _count2;
-                    _count1 = _count2 = 0;
                 }
+
+                MaxCount = Math.Max(_count1, _count2);
+                Count1 = _count1;
+                Count2 = _count2;
+                _count1 = _count2 = 0;
             }
         }
         public TagStatus Status { get; set; }
